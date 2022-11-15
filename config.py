@@ -15,15 +15,24 @@ from libqtile.dgroups import simple_key_binder
 
 import colors
 
-
 #My programmes
 mod = "mod4"
 mod1 = "mod1"
-myTerminal = 'kitty'
 myBrowser = 'brave-browser'
-myTextEditor = 'subl'
+myTerminal = 'kitty'
+myTextEditor = myTerminal + ' nvim'
+myPrimaryFileManager = 'pcmanfm'
+mySecondaryFileManager = myTerminal + ' vifm'
+myRecorder = 'obs'
+myDrawingApp = 'mypaint'
+myVideoEditor = 'kdenlive'
+myAudioEditor = 'audacity'
+myPhotoEditor = 'gimp'
+myVirtualbox = 'virtualbox'
+myVideoPlayer = 'vlc'
+myPrimaryMenu = 'rofi -show run'
+myEmailCliant = 'thunderbird'
 
-# Bindings
 keys = [
     # A list of available commands that can be bound to keys can be found
     # at https://docs.qtile.org/en/latest/manual/config/lazy.html
@@ -56,20 +65,14 @@ keys = [
         lazy.layout.toggle_split(),
         desc="Toggle between split and unsplit sides of stack",
     ),
-    Key([mod], "Return", lazy.spawn(myTerminal), desc="Launch terminal"),
+    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "q", lazy.window.kill(), desc="Kill focused window"),
+    Key([mod], "w", lazy.window.kill(), desc="Kill focused window"),
     Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-
-    # My Bindings
-    Key([mod], "w", lazy.spawncmd(myBrowser), desc="Launch browser"),
-    Key([mod], "t", lazy.spawncmd(myTextEditor), desc="Launch Text Editor"),
-
 ]
-
 
 
 groups = [Group("", layout='bsp'),
@@ -96,11 +99,10 @@ groups.append(ScratchPad('scratchpad', [
 keys.extend([
     Key(["control"], "1", lazy.group['scratchpad'].dropdown_toggle('myTerminal')),
     Key(["control"], "2", lazy.group['scratchpad'].dropdown_toggle('myTextEditor')),
-    Key(["control"], "3", lazy.group['scratchpad'].dropdown_toggle('myBrowser')),
+    Key(["control"], "3", lazy.group['scratchpad'].dropdown_toggle('mySecondaryFileManager')),
 ])
 
 colors, backgroundColor, foregroundColor, workspaceColor, foregroundColorTwo = colors.doomOne() 
-
 
 layouts = [
     layout.MonadTall(border_focus = colors[0], border_normal = colors[0], border_width = 1, margin = 8),
@@ -124,7 +126,6 @@ widget_defaults = dict(
     background = colors[0]
 )
 extension_defaults = widget_defaults.copy()
-
 
 screens = [
     Screen(
@@ -267,7 +268,6 @@ screens = [
     ),
 ]
 
-
 # Drag floating layouts.
 mouse = [
     Drag([mod], "Button1", lazy.window.set_position_floating(),
@@ -296,10 +296,10 @@ focus_on_window_activation = "smart"
 reconfigure_screens = True
 
 #Programms to start on log in
-#@hook.subscribe.startup_once
-#def autostart ():
-#    home = os.path.expanduser('~/.config/qtile/autostart.sh')
-#    subprocess.call([home])
+@hook.subscribe.startup_once
+def autostart ():
+    home = os.path.expanduser('~/.config/qtile/autostart.sh')
+    subprocess.call([home])
 
 # If things like steam games want to auto-minimize themselves when losing
 # focus, should we respect this or not?
